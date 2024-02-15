@@ -17,14 +17,21 @@ att_key = {}
 for f in file_list:
     with open(f, 'r') as file:
         csvread = csv.reader(file)
+        g = None
         for row in csvread:
             # if row and (row[2][-2:] == 'AM' or row[2][-2:] == 'PM'):
             #     date_key.append(row[2][:5])
-            if row and row[-1] == 'Yes':
+            if row and not g:
+                for x in range(len(row)):
+                    print(row[x])
+                    if row[x] == "Guest":
+                        g = x
+            elif row and row[g] == 'Yes':
                 if row[0] not in att_key:
                     att_key[row[0]] = 1
                 else:
                     att_key[row[0]] += 1
+        print(att_key)
 with open('output.csv', 'w', newline='') as f:
     fnames = ['name', 'days_att']
     writer = csv.DictWriter(f, fieldnames=fnames)
